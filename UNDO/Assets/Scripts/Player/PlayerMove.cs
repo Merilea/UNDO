@@ -8,7 +8,7 @@ public class PlayerMove : MonoBehaviour
 
     // Movement speeds
     public float walkSpeed = 6f;
-    public float runSpeed = 12f;
+    public float runSpeed = 9f;
     public float crouchSpeed = 3f;
 
     // Jumping parameters
@@ -88,7 +88,7 @@ public class PlayerMove : MonoBehaviour
         {
             characterController.height = defaultHeight;
             walkSpeed = 6f;
-            runSpeed = 12f;
+            runSpeed = 9f;
         }
 
         // Move the player
