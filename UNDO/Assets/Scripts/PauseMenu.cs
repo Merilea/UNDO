@@ -4,13 +4,21 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuCanvas;
+    public InventoryManager inventoryManager;
 
     void Update()
     {
-        // Check if the Escape key is pressed and the shop and letter image are not active
-        if (Input.GetKeyDown(KeyCode.Escape))// && !LaptopInteraction.isShopMenuActive && !LetterPopUp.isLetterImageActive)
+        // Check if the Escape key is pressed
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            TogglePauseMenu();
+            if (inventoryManager.IsInventoryActive())
+            {
+                inventoryManager.ToggleInventory();
+            }
+            else
+            {
+                TogglePauseMenu();
+            }
         }
     }
 
@@ -24,7 +32,7 @@ public class PauseMenu : MonoBehaviour
 
             // Lock or unlock the cursor based on pause state
             Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = isPaused; // Show or hide the cursor based on pause state
+            Cursor.visible = true; // Ensure the cursor is always visible
         }
     }
 
@@ -38,7 +46,7 @@ public class PauseMenu : MonoBehaviour
 
             // Lock the cursor again when the game resumes
             Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false; // Hide the cursor again
+            Cursor.visible = true; // Ensure the cursor is always visible
         }
     }
 
