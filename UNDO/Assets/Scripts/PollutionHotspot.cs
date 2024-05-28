@@ -6,7 +6,7 @@ public class PollutionHotspot : Interactable
 
     public override void Interact()
     {
-        base.Interact();
+        // Remove the base.Interact() call as it's abstract and cannot be called
         GameManager.Instance.ReducePollution(pollutionReductionAmount);
         Destroy(gameObject); // Remove the placeholder after interaction
     }
