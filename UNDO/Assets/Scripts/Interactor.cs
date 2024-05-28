@@ -1,40 +1,70 @@
+using UNDO;
 using UnityEngine;
 
-public class Interactor : MonoBehaviour
+namespace UNDO
 {
-    public float interactRange = 3f;
-    public LayerMask interactableLayer;
-
-    void Update()
+    public class Interactor : MonoBehaviour
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Interact();
-        }
-    }
+        public float interactRange = 3f;
+        public LayerMask interactableLayer;
 
-    void Interact()
-    {
-        RaycastHit hit;
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        Debug.DrawRay(transform.position, forward * interactRange, Color.green, 2.0f);
+        private Interactable currentInteractable;
 
-        if (Physics.Raycast(transform.position, forward, out hit, interactRange, interactableLayer))
+        void Update()
         {
-            Interactable interactable = hit.collider.GetComponent<Interactable>();
-            if (interactable != null)
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                interactable.Interact();
-                Debug.Log("Interacted with: " + hit.collider.name);
+                if (currentInteractable != null)
+                {
+                    ItemPickupBehavior itemPickup = currentInteractable.GetComponent<ItemPickupBehavior>();
+                    if (itemPickup != null)
+                    {
+                        itemPickup.PickupItem();
+                    }
+                }
+            }
+
+            CheckForInteractable();
+        }
+
+        void CheckForInteractable()
+        {
+            RaycastHit hit;
+            Vector3 forward = transform.TransformDirection(Vector3.forward);
+            Debug.DrawRay(transform.position, forward * interactRange, Color.green, 2.0f);
+
+            if (Physics.Raycast(transform.position, forward, out hit, interactRange, interactableLayer))
+            {
+                Interactable interactable = hit.collider.GetComponent<Interactable>();
+                if (interactable != null)
+                {
+                    if (currentInteractable != interactable)
+                    {
+                        if (currentInteractable != null)
+                        {
+                            currentInteractable.StopInteraction();
+                        }
+                        currentInteractable = interactable;
+                        currentInteractable.Interact();
+                    }
+                }
+                else
+                {
+                    if (currentInteractable != null)
+                    {
+                        currentInteractable.StopInteraction();
+                        currentInteractable = null;
+                    }
+                }
             }
             else
             {
-                Debug.Log("Hit non-interactable object: " + hit.collider.name);
+                if (currentInteractable != null)
+                {
+                    currentInteractable.StopInteraction();
+                    currentInteractable = null;
+                }
             }
-        }
-        else
-        {
-            Debug.Log("No interactable object hit");
         }
     }
 }

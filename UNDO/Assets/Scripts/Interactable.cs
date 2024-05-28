@@ -1,7 +1,17 @@
 using UnityEngine;
 
-public abstract class Interactable : MonoBehaviour
+namespace UNDO
 {
-    public abstract void Interact();
-    public virtual void StopInteraction() { }
+    public class Interactable : MonoBehaviour
+    {
+        public virtual void Interact()
+        {
+            // Base interact method
+        }
+
+        public virtual void StopInteraction()
+        {
+            // Base stop interaction method
+        }
+    }
 }

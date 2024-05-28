@@ -32,10 +32,14 @@ public class PlayerMove : MonoBehaviour
     private CharacterController characterController;
     private bool canMove = true;
 
+    // Reference to the PlayerHealth script
+    private PlayerHealth playerHealth;
+
     void Start()
     {
         // Get reference to CharacterController component
         characterController = GetComponent<CharacterController>();
+        playerHealth = GetComponent<PlayerHealth>();
 
         // Lock cursor and show it
         Cursor.lockState = CursorLockMode.Locked;
@@ -54,7 +58,7 @@ public class PlayerMove : MonoBehaviour
             Vector3 right = transform.TransformDirection(Vector3.right);
 
             // Check if the player is running
-            bool isRunning = Input.GetKey(KeyCode.LeftShift);
+            bool isRunning = Input.GetKey(KeyCode.LeftShift) && playerHealth.stamina > 0;
 
             // Calculate movement speed based on input and whether player is running or not
             float curSpeedX = canMove ? (isRunning ? runSpeed : walkSpeed) * Input.GetAxis("Vertical") : 0;
@@ -66,10 +70,17 @@ public class PlayerMove : MonoBehaviour
             // Combine the movement directions
             moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
+            // Handle running stamina consumption
+            if (isRunning)
+            {
+                playerHealth.UseStamina(Time.deltaTime * 10); // Adjust stamina usage rate as needed
+            }
+
             // Handle jumping
-            if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
+            if (Input.GetButton("Jump") && canMove && characterController.isGrounded && playerHealth.stamina > 0)
             {
                 moveDirection.y = jumpPower;
+                playerHealth.UseStamina(15); // Adjust stamina usage for jumping as needed
             }
             else
             {

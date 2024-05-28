@@ -1,6 +1,7 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -10,18 +11,31 @@ public class PlayerHealth : MonoBehaviour
     public float stamina;
     public float pollutionImpact = 1f; // Impact of pollution on health
     public float staminaRegenRate = 5f; // Stamina regeneration rate per second
-    public float healthRegenRate = 1f; // Health regeneration rate per second
+    public float healthDecayRate = 0.1f; // Health decay rate per second, set to a slower rate
 
     public Slider healthSlider;
     public Slider staminaSlider;
-    public Text healthText;
-    public Text staminaText;
+    public TextMeshProUGUI healthText; // Change to TextMeshProUGUI
+    public TextMeshProUGUI staminaText; // Change to TextMeshProUGUI
+    public Image staminaFillImage; // Reference to the Image component of the fill area
 
     void Start()
     {
         // Initialize health and stamina
         health = maxHealth;
         stamina = maxStamina;
+
+        // Set the stamina slider fill color to blue
+        if (staminaFillImage != null)
+        {
+            staminaFillImage.color = Color.blue;
+            // Adjust the RectTransform of the Fill Area
+            RectTransform fillRect = staminaFillImage.GetComponent<RectTransform>();
+            fillRect.anchorMin = new Vector2(0, 0);
+            fillRect.anchorMax = new Vector2(1, 1);
+            fillRect.offsetMin = new Vector2(0, 0);
+            fillRect.offsetMax = new Vector2(0, 0);
+        }
 
         // Initialize UI elements
         UpdateHealthUI();
@@ -31,7 +45,7 @@ public class PlayerHealth : MonoBehaviour
     void Update()
     {
         // Handle stamina regeneration
-        if (stamina < maxStamina)
+        if (stamina < maxStamina && !IsPerformingAction())
         {
             stamina += staminaRegenRate * Time.deltaTime;
             if (stamina > maxStamina)
@@ -41,29 +55,14 @@ public class PlayerHealth : MonoBehaviour
             UpdateStaminaUI();
         }
 
-        // Handle pollution impact on health
-        if (IsInPollutedArea())
+        // Continuously decrease health over time
+        health -= healthDecayRate * Time.deltaTime;
+        if (health < 0)
         {
-            health -= pollutionImpact * Time.deltaTime;
-            if (health < 0)
-            {
-                health = 0;
-                // Handle player death (optional)
-                OnPlayerDeath();
-            }
-            UpdateHealthUI();
+            health = 0;
+            OnPlayerDeath();
         }
-
-        // Regenerate health if not in a polluted area
-        if (health < maxHealth && !IsInPollutedArea())
-        {
-            health += healthRegenRate * Time.deltaTime;
-            if (health > maxHealth)
-            {
-                health = maxHealth;
-            }
-            UpdateHealthUI();
-        }
+        UpdateHealthUI();
     }
 
     void UpdateHealthUI()
@@ -90,18 +89,18 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    bool IsInPollutedArea()
+    bool IsPerformingAction()
     {
-        // Implement logic to check if the player is in a polluted area
-        // This could be based on triggers, colliders, or pollution levels in the environment
-        return false; // Placeholder
+        // Add logic to determine if the player is performing an action that should prevent stamina regeneration
+        // For instance, running or jumping
+        return Input.GetKey(KeyCode.LeftShift) || Input.GetButton("Jump");
     }
 
     void OnPlayerDeath()
     {
         // Implement logic for player death, such as respawn or game over
         Debug.Log("Player has died.");
-        SceneManager.LoadScene("GameOverScene");
+        SceneManager.LoadScene("GameOverScene"); // Load the GameOverScene
     }
 
     public void TakeDamage(float damage)
