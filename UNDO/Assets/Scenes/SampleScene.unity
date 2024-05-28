@@ -2039,7 +2039,7 @@ GameObject:
   - component: {fileID: 1049642889}
   - component: {fileID: 1049642888}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: PlayerHealth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5110,7 +5110,7 @@ GameObject:
   - component: {fileID: 1904310106}
   - component: {fileID: 1904310105}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: StaminaTXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
