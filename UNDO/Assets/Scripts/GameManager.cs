@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -24,12 +25,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Update()
+    void OnDestroy()
     {
-        // Check for win condition
-        if (pollutionLevel <= pollutionReductionTarget && cleanEnergyProjects >= requiredCleanEnergyProjects)
+        // Unsubscribe from the sceneLoaded event to avoid memory leaks
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Destroy the GameManager if the current scene is GameOverScene or WinScene
+        if (scene.name == "GameOverScene" || scene.name == "WinScene")
         {
-            WinGame();
+            Destroy(gameObject);
         }
     }
 
@@ -50,12 +57,12 @@ public class GameManager : MonoBehaviour
     void WinGame()
     {
         // Show win screen
-        SceneManager.LoadScene("WinScene");
+        SceneManager.LoadScene("WinScene", LoadSceneMode.Single);
     }
 
     public void GameOver()
     {
         // Show game over screen
-        SceneManager.LoadScene("GameOverScene");
+        SceneManager.LoadScene("GameOverScene", LoadSceneMode.Single);
     }
 }
