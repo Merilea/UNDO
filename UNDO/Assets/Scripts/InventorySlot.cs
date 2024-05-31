@@ -11,8 +11,17 @@ namespace UNDO
         [SerializeField] private Image icon;
         [SerializeField] private Text itemName;
         [SerializeField] private Text amountDisplay;
-        [SerializeField] private GameObject dropButton;
+        [SerializeField] private GameObject useButton; // Change to use button
+
         private int amount = 0;
+
+        private void Awake()
+        {
+            if (useButton == null)
+            {
+                Debug.LogError("Use Button is not assigned in the Inspector.");
+            }
+        }
 
         public void AddItem(Item newItem)
         {
@@ -37,7 +46,10 @@ namespace UNDO
             itemName.text = _item.item.name;
             itemName.enabled = true;
 
-            dropButton.SetActive(true);
+            if (useButton != null)
+            {
+                useButton.SetActive(true); // Enable use button
+            }
         }
 
         public void StackItem(Item newItem)
@@ -56,7 +68,10 @@ namespace UNDO
             itemName.text = "";
             itemName.enabled = false;
 
-            dropButton.SetActive(false);
+            if (useButton != null)
+            {
+                useButton.SetActive(false); // Disable use button
+            }
             SetAmount(0);
         }
 
@@ -77,18 +92,9 @@ namespace UNDO
 
         public void UseItem()
         {
-            if (_item.item.itemType == ItemType.Consumable)
+            if (_item.item.itemType == ItemType.Food || _item.item.itemType == ItemType.Water)
             {
                 Inventory.instance.Consume(_item.item, _item.quantity);
-                ClearSlot();
-            }
-        }
-
-        public void PlaceItem()
-        {
-            if (_item.item.itemType == ItemType.CleanEnergyStation)
-            {
-                _item.item.StartPlacement();
                 ClearSlot();
             }
         }

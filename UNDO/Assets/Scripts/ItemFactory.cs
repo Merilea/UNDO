@@ -1,24 +1,19 @@
-using UNDO;
 using UnityEngine;
 
 namespace UNDO
 {
     public class ItemFactory : MonoBehaviour
     {
-        [SerializeField] GameObject consumable;
-        [SerializeField] GameObject cleanEnergy;
-
         public GameObject getItem(ItemType item)
         {
-            switch (item)
+            foreach (var itemSO in Resources.LoadAll<ItemSO>(""))
             {
-                case ItemType.Consumable:
-                    return consumable;
-                case ItemType.CleanEnergyStation:
-                    return cleanEnergy;
-                default:
-                    return null;
+                if (itemSO.itemType == item)
+                {
+                    return itemSO.prefab;
+                }
             }
+            return null;
         }
     }
 }

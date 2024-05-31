@@ -1,4 +1,3 @@
-using UNDO;
 using UnityEngine;
 
 namespace UNDO
@@ -16,11 +15,7 @@ namespace UNDO
             {
                 if (currentInteractable != null)
                 {
-                    ItemPickupBehavior itemPickup = currentInteractable.GetComponent<ItemPickupBehavior>();
-                    if (itemPickup != null)
-                    {
-                        itemPickup.PickupItem();
-                    }
+                    currentInteractable.Interact();
                 }
             }
 
@@ -45,7 +40,7 @@ namespace UNDO
                             currentInteractable.StopInteraction();
                         }
                         currentInteractable = interactable;
-                        currentInteractable.Interact();
+                        Debug.Log("Interactable detected: " + interactable.name);
                     }
                 }
                 else

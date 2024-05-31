@@ -2,7 +2,9 @@ namespace UNDO
 {
     public enum ItemType
     {
-        Consumable,
+        Food,
+        Water,
+        Gear,
         CleanEnergyStation
     }
 }

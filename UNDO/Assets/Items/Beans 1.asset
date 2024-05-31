@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 137cc63526ed6da4e86869fad8425f4b, type: 3}
-  m_Name: Chicken
+  m_Name: Beans 1
   m_EditorClassIdentifier: 
-  itemType: 1
-  name: Chicken
-  icon: {fileID: 21300000, guid: 856fa0b9cf67b824bb74a786256fd818, type: 3}
-  sprite: {fileID: 21300000, guid: 856fa0b9cf67b824bb74a786256fd818, type: 3}
+  itemType: 0
+  name: Bean Can
+  prefab: {fileID: 7027308916499646875, guid: ba203aebc76d43e4489f73f1e80d93a5, type: 3}
+  icon: {fileID: 21300000, guid: 7595028f9da65db4e8b817170f61d546, type: 3}
   size: 1
-  maxStackAmount: 3
-  interactText: Press E to pickup chicken
+  interactText: 'Press E to pickup '
   description: 
   isStackable: 0
+  maxStackAmount: 3
   healingMode: 0
-  healAmount: 10
+  healAmount: 5
