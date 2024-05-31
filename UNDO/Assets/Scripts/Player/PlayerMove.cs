@@ -7,7 +7,7 @@ public class PlayerMove : MonoBehaviour
     public Camera playerCamera;
 
     // Movement speeds
-    public float walkSpeed = 6f;
+    public float walkSpeed = 4f;
     public float runSpeed = 9f;
     public float crouchSpeed = 3f;
 
@@ -77,7 +77,7 @@ public class PlayerMove : MonoBehaviour
             }
 
             // Handle jumping
-            if (Input.GetButton("Jump") && canMove && characterController.isGrounded && playerHealth.stamina > 0)
+            if (Input.GetButton("Jump") && canMove && characterController.isGrounded && playerHealth.stamina >= 15)
             {
                 moveDirection.y = jumpPower;
                 playerHealth.UseStamina(15); // Adjust stamina usage for jumping as needed
@@ -103,7 +103,7 @@ public class PlayerMove : MonoBehaviour
             else
             {
                 characterController.height = defaultHeight;
-                walkSpeed = 6f;
+                walkSpeed = 4f;
                 runSpeed = 9f;
             }
 
