@@ -33,11 +33,9 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Destroy the GameManager if the current scene is GameOverScene or WinScene
-        if (scene.name == "GameOverScene" || scene.name == "WinScene")
-        {
-            Destroy(gameObject);
-        }
+        // Unlock and make the cursor visible
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void ReducePollution(float amount)
