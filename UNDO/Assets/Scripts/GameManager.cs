@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     public int cleanEnergyProjects = 0;
     public int requiredCleanEnergyProjects = 5;
 
+    private float initialPollutionLevel;
+    private int initialCleanEnergyProjects;
+
     void Awake()
     {
         if (Instance == null)
@@ -18,6 +21,10 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
+
+            // Save initial values
+            initialPollutionLevel = pollutionLevel;
+            initialCleanEnergyProjects = cleanEnergyProjects;
         }
         else
         {
@@ -36,6 +43,12 @@ public class GameManager : MonoBehaviour
         // Unlock and make the cursor visible
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        // Reset game state when SampleScene is loaded
+        if (scene.name == "SampleScene")
+        {
+            ResetGameState();
+        }
     }
 
     public void ReducePollution(float amount)
@@ -62,5 +75,17 @@ public class GameManager : MonoBehaviour
     {
         // Show game over screen
         SceneManager.LoadScene("GameOverScene", LoadSceneMode.Single);
+    }
+
+    public void RestartGame()
+    {
+        // Reload the game scene without resetting the game state
+        SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+    }
+
+    private void ResetGameState()
+    {
+        pollutionLevel = initialPollutionLevel;
+        cleanEnergyProjects = initialCleanEnergyProjects;
     }
 }
