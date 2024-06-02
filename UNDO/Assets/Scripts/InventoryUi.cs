@@ -9,11 +9,13 @@ namespace UNDO
         [SerializeField] private GameObject slotsParent;
         [SerializeField] private GameObject inventoryCanvas;
         private InventorySlot[] slots;
+        private PlayerMove playerMove;
 
         void Start()
         {
             inventory = Inventory.instance;
             inventory.onItemChangedCallBack += UpdateUI;
+            playerMove = FindObjectOfType<PlayerMove>();
 
             slots = slotsParent.GetComponentsInChildren<InventorySlot>();
             ClearSlots();
@@ -41,8 +43,16 @@ namespace UNDO
         {
             bool isActive = inventoryCanvas.activeSelf;
             inventoryCanvas.SetActive(!isActive);
+
+            // Set cursor lock state and visibility based on inventory state
             Cursor.lockState = isActive ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !isActive;
+            Cursor.visible = true; // Ensure the cursor is always visible
+
+            // Update the PlayerMove script with the current inventory state
+            if (playerMove != null)
+            {
+                playerMove.isInventoryOpen = !isActive;
+            }
         }
 
         public bool IsInventoryActive()
@@ -51,4 +61,3 @@ namespace UNDO
         }
     }
 }
-

@@ -153,5 +153,11 @@ public class PlayerMove : MonoBehaviour
                 transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
             }
         }
+        else
+        {
+            // Ensure the cursor is visible and unlocked when inventory is open or inspection is happening
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 }

@@ -40,7 +40,7 @@ public class PauseMenu : MonoBehaviour
         else
         {
             Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            Cursor.visible = true; // Ensure the cursor is always visible
         }
     }
 
@@ -52,8 +52,9 @@ public class PauseMenu : MonoBehaviour
             pauseMenuCanvas.SetActive(isPaused);
             Time.timeScale = isPaused ? 0f : 1f; // Pause or resume the game accordingly
 
+            // Ensure the cursor is visible and manage its lock state
             Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = isPaused;
+            Cursor.visible = true;
         }
     }
 
@@ -65,7 +66,7 @@ public class PauseMenu : MonoBehaviour
             Time.timeScale = 1f; // Resume the game by setting time scale to 1
 
             Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false; // Hide the cursor
+            Cursor.visible = true; // Ensure the cursor is always visible
         }
     }
 

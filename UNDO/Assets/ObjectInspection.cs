@@ -49,7 +49,7 @@ public class ObjectInspection : MonoBehaviour
                         lastZoomToggleTime = Time.time; // Update the last toggle time
                         if (!isZoomed)
                         {
-                            ResetFOV(); // Immediately reset FOV to normal when inspection stops
+                            StopInspection();
                         }
                         Debug.Log("Zoom toggled: " + isZoomed);
                     }
@@ -79,7 +79,7 @@ public class ObjectInspection : MonoBehaviour
             {
                 isZoomed = false;
                 lastZoomToggleTime = Time.time; // Update the last toggle time
-                ResetFOV(); // Immediately reset FOV to normal when inspection stops
+                StopInspection(); // Immediately reset FOV to normal when inspection stops
                 Debug.Log("Stopped inspecting");
             }
         }
@@ -98,6 +98,9 @@ public class ObjectInspection : MonoBehaviour
     {
         isZoomed = false;
         ResetFOV();
+        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
     }
 
     private void ResetFOV()
