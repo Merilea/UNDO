@@ -15,11 +15,11 @@ MonoBehaviour:
   itemType: 1
   name: Bottled Water
   prefab: {fileID: 5364055125287031665, guid: cc349ecce85e0a14187413f781079c6b, type: 3}
-  icon: {fileID: 0}
-  size: 1
+  icon: {fileID: 21300000, guid: 2407b95424592de4ba9dc313d24fc6af, type: 3}
+  size: 10
   interactText: 'Press E to pickup '
   description: Bottled Water
   isStackable: 0
-  maxStackAmount: 3
+  maxStackAmount: 5
   healingMode: 0
-  healAmount: 3
+  healAmount: 10

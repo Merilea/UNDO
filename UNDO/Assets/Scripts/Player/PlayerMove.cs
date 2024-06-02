@@ -8,7 +8,7 @@ public class PlayerMove : MonoBehaviour
 
     // Movement speeds
     public float walkSpeed = 6f;
-    public float runSpeed = 9f;
+    public float runSpeed = 12f;
     public float crouchSpeed = 3f;
 
     // Jumping parameters
@@ -83,7 +83,7 @@ public class PlayerMove : MonoBehaviour
             Vector3 forward = transform.TransformDirection(Vector3.forward);
             Vector3 right = transform.TransformDirection(Vector3.right);
 
-            bool isRunning = Input.GetKey(KeyCode.LeftShift);
+            bool isRunning = Input.GetKey(KeyCode.LeftShift) && playerHealth.stamina > 0;
 
             float curSpeedX = canMove ? (isRunning ? runSpeed : walkSpeed) * Input.GetAxis("Vertical") : 0;
             float curSpeedY = canMove ? (isRunning ? runSpeed : walkSpeed) * Input.GetAxis("Horizontal") : 0;
@@ -99,10 +99,6 @@ public class PlayerMove : MonoBehaviour
                     moveDirection.y = jumpPower;
                     playerHealth.UseStamina(10f);
                 }
-                else
-                {
-                    playerHealth.TakeDamage(5f);
-                }
             }
             else
             {
@@ -116,14 +112,7 @@ public class PlayerMove : MonoBehaviour
 
             if (isRunning && canMove)
             {
-                if (playerHealth.stamina >= 5f)
-                {
-                    playerHealth.UseStamina(5f * Time.deltaTime);
-                }
-                else
-                {
-                    playerHealth.TakeDamage(5f);
-                }
+                playerHealth.UseStamina(5f * Time.deltaTime);
             }
 
             // Handle crouching
@@ -137,7 +126,7 @@ public class PlayerMove : MonoBehaviour
             {
                 targetHeight = defaultHeight;
                 walkSpeed = 6f;
-                runSpeed = 9f;
+                runSpeed = 12f;
             }
 
             // Smoothly transition the height
