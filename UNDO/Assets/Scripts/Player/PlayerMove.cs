@@ -7,7 +7,7 @@ public class PlayerMove : MonoBehaviour
     public Camera playerCamera;
 
     // Movement speeds
-    public float walkSpeed = 4f;
+    public float walkSpeed = 6f;
     public float runSpeed = 9f;
     public float crouchSpeed = 3f;
 
@@ -22,6 +22,7 @@ public class PlayerMove : MonoBehaviour
     // Height parameters
     public float defaultHeight = 2f;
     public float crouchHeight = 1f;
+    public float crouchTransitionSpeed = 5f; // Speed of crouch transition
 
     // Public variable to track inventory state
     public bool isInventoryOpen = false;
@@ -32,85 +33,118 @@ public class PlayerMove : MonoBehaviour
     private CharacterController characterController;
     private bool canMove = true;
 
-    // Reference to the PlayerHealth script
     private PlayerHealth playerHealth;
+    private ObjectInspection objectInspection; // Reference to ObjectInspection
+    private float targetHeight; // Target height for smooth crouching
 
     void Start()
     {
-        // Get reference to CharacterController component
         characterController = GetComponent<CharacterController>();
         playerHealth = GetComponent<PlayerHealth>();
+        objectInspection = FindObjectOfType<ObjectInspection>(); // Find the ObjectInspection script
 
-        // Lock cursor and show it
+        if (playerCamera == null)
+        {
+            playerCamera = Camera.main;
+        }
+
+        if (characterController == null)
+        {
+            Debug.LogError("CharacterController component is missing.");
+        }
+
+        if (playerHealth == null)
+        {
+            Debug.LogError("PlayerHealth component is missing.");
+        }
+
+        if (objectInspection == null)
+        {
+            Debug.LogError("ObjectInspection component is missing in the scene.");
+        }
+
+        targetHeight = defaultHeight; // Initialize target height
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = true;
     }
 
     void Update()
     {
-        // Ensure the cursor is always visible
-        Cursor.visible = true;
-
-        if (!isInventoryOpen)
+        if (characterController == null || playerHealth == null || objectInspection == null)
         {
-            // Get the direction of movement based on player's input
+            return; // Exit update if any required component is missing
+        }
+
+        if (!objectInspection.IsInspecting() && !isInventoryOpen)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = true;
+
             Vector3 forward = transform.TransformDirection(Vector3.forward);
             Vector3 right = transform.TransformDirection(Vector3.right);
 
-            // Check if the player is running
-            bool isRunning = Input.GetKey(KeyCode.LeftShift) && playerHealth.stamina > 0;
+            bool isRunning = Input.GetKey(KeyCode.LeftShift);
 
-            // Calculate movement speed based on input and whether player is running or not
             float curSpeedX = canMove ? (isRunning ? runSpeed : walkSpeed) * Input.GetAxis("Vertical") : 0;
             float curSpeedY = canMove ? (isRunning ? runSpeed : walkSpeed) * Input.GetAxis("Horizontal") : 0;
 
-            // Store the current vertical movement direction
             float movementDirectionY = moveDirection.y;
 
-            // Combine the movement directions
             moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
-            // Handle running stamina consumption
-            if (isRunning)
+            if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
             {
-                playerHealth.UseStamina(Time.deltaTime * 10); // Adjust stamina usage rate as needed
-            }
-
-            // Handle jumping
-            if (Input.GetButton("Jump") && canMove && characterController.isGrounded && playerHealth.stamina >= 15)
-            {
-                moveDirection.y = jumpPower;
-                playerHealth.UseStamina(15); // Adjust stamina usage for jumping as needed
+                if (playerHealth.stamina >= 10f)
+                {
+                    moveDirection.y = jumpPower;
+                    playerHealth.UseStamina(10f);
+                }
+                else
+                {
+                    playerHealth.TakeDamage(5f);
+                }
             }
             else
             {
                 moveDirection.y = movementDirectionY;
             }
 
-            // Apply gravity
             if (!characterController.isGrounded)
             {
                 moveDirection.y -= gravity * Time.deltaTime;
             }
 
+            if (isRunning && canMove)
+            {
+                if (playerHealth.stamina >= 5f)
+                {
+                    playerHealth.UseStamina(5f * Time.deltaTime);
+                }
+                else
+                {
+                    playerHealth.TakeDamage(5f);
+                }
+            }
+
             // Handle crouching
             if (Input.GetKey(KeyCode.LeftControl) && canMove)
             {
-                characterController.height = crouchHeight;
+                targetHeight = crouchHeight;
                 walkSpeed = crouchSpeed;
                 runSpeed = crouchSpeed;
             }
             else
             {
-                characterController.height = defaultHeight;
-                walkSpeed = 4f;
+                targetHeight = defaultHeight;
+                walkSpeed = 6f;
                 runSpeed = 9f;
             }
 
-            // Move the player
+            // Smoothly transition the height
+            characterController.height = Mathf.Lerp(characterController.height, targetHeight, crouchTransitionSpeed * Time.deltaTime);
+
             characterController.Move(moveDirection * Time.deltaTime);
 
-            // Handle player rotation
             if (canMove)
             {
                 rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;

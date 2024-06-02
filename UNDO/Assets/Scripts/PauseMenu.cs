@@ -1,6 +1,6 @@
+using UNDO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UNDO;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -30,6 +30,18 @@ public class PauseMenu : MonoBehaviour
                 inventoryUi.ToggleInventory();
             }
         }
+
+        // Manage cursor state based on the current UI state
+        if (pauseMenuCanvas.activeSelf || inventoryUi.IsInventoryActive())
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     public void TogglePauseMenu()
@@ -40,7 +52,6 @@ public class PauseMenu : MonoBehaviour
             pauseMenuCanvas.SetActive(isPaused);
             Time.timeScale = isPaused ? 0f : 1f; // Pause or resume the game accordingly
 
-            // Lock or unlock the cursor based on pause state
             Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = isPaused;
         }
@@ -53,7 +64,6 @@ public class PauseMenu : MonoBehaviour
             pauseMenuCanvas.SetActive(false); // Hide the pause menu canvas
             Time.timeScale = 1f; // Resume the game by setting time scale to 1
 
-            // Lock the cursor again when the game resumes
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false; // Hide the cursor
         }
