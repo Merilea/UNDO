@@ -1,9 +1,8 @@
-using UNDO;
 using UnityEngine;
 
 namespace UNDO
 {
-    public class ItemPickupBehavior : Interactable
+    public class PickUpBehaviour : Interactable
     {
         public ItemSO item;
         [SerializeField] public int quantity = 1;
@@ -17,17 +16,17 @@ namespace UNDO
 
         public override void Interact()
         {
-            base.Interact();
             if (item.interactText.Length > 0 && !showingMessage)
             {
                 showingMessage = true;
                 ShowPickUpMessage();
             }
+
+            AddToInventory();
         }
 
         public override void StopInteraction()
         {
-            base.StopInteraction();
             if (item.interactText.Length > 0)
             {
                 TurnOffPickUpMessage();
@@ -46,16 +45,16 @@ namespace UNDO
             messageUI.SetText(item.interactText, MessageType.Interact);
         }
 
-        public void PickupItem()
+        private void AddToInventory()
         {
-            if (Inventory.instance.Add(item, quantity))
+            Inventory inventory = Inventory.instance;
+            if (inventory != null)
             {
-                Debug.Log("Adding " + item.name + " to the inventory");
-                Destroy(gameObject);
-            }
-            else
-            {
-                Debug.Log("Failed to add " + item.name + " to the inventory");
+                if (inventory.Add(item, quantity))
+                {
+                    Debug.Log("Item added to inventory: " + item.name);
+                    Destroy(gameObject); // Remove the item from the world after adding to inventory
+                }
             }
         }
     }

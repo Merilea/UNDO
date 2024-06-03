@@ -1,26 +1,24 @@
-using UNDO;
 using UnityEngine;
 
 namespace UNDO
 {
-    public class CleanEnergyStation : MonoBehaviour
+    public class CleanEnergyStation : Interactable
     {
         public ItemSO item;
-
         private bool isPlaced = false;
 
-        public void Interact()
+        public override void Interact()
         {
-            if (!isPlaced)
+            if (isPlaced)
             {
+                // Pick up the placed item
                 Inventory.instance.Add(item, 1);
-                gameObject.SetActive(false);
+                Destroy(gameObject);
             }
             else
             {
                 Inventory.instance.Add(item, 1);
                 gameObject.SetActive(false);
-                isPlaced = false;
             }
         }
 

@@ -150,7 +150,7 @@ namespace UNDO
         public void StartPlacement(ItemSO item)
         {
             itemToPlace = item;
-            Debug.Log("Starting placement for item: " + itemToPlace.name); // Debug log to check itemToPlace
+            Debug.Log("Starting placement for item: " + itemToPlace.name);
             isPlacingItem = true;
             CreatePlacementIndicator(item);
         }
@@ -167,11 +167,11 @@ namespace UNDO
             {
                 placementIndicator = Instantiate(itemPrefab);
                 DisablePhysics(placementIndicator);
-                Debug.Log("Placement indicator created for item: " + item.name); // Debug log to confirm creation
+                Debug.Log("Placement indicator created for item: " + item.name);
             }
             else
             {
-                Debug.LogError("Failed to get item prefab for placement indicator."); // Debug log to catch errors
+                Debug.LogError("Failed to get item prefab for placement indicator.");
             }
         }
 
@@ -202,7 +202,7 @@ namespace UNDO
         {
             if (placementIndicator == null)
             {
-                Debug.LogError("Placement indicator is null."); // Debug log to catch null reference
+                Debug.LogError("Placement indicator is null.");
                 return;
             }
 
@@ -213,16 +213,16 @@ namespace UNDO
                 Vector3 newPosition = hit.point;
                 newPosition.y += placementIndicator.transform.localScale.y / 2; // Adjust position to be above the terrain
                 placementIndicator.transform.position = newPosition;
-                Debug.Log("Placement indicator position updated to: " + newPosition); // Debug log to check position
+                Debug.Log("Placement indicator position updated to: " + newPosition);
 
                 if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.E))
                 {
-                    PlaceItem(itemToPlace, newPosition); // Pass itemToPlace and position
+                    PlaceItem(itemToPlace, newPosition);
                 }
             }
             else
             {
-                Debug.LogError("Raycast did not hit any surface."); // Debug log to catch raycast errors
+                Debug.LogError("Raycast did not hit any surface.");
             }
         }
 
@@ -236,11 +236,18 @@ namespace UNDO
                 RemoveItem(item);
                 isPlacingItem = false;
                 Destroy(placementIndicator);
-                Debug.Log("Item placed at position: " + position); // Debug log to confirm placement
+                Debug.Log("Item placed at position: " + position);
+
+                // Ensure the placed item has CleanEnergyStation component to allow interaction for pickup
+                CleanEnergyStation cleanEnergyStation = placedItem.GetComponent<CleanEnergyStation>();
+                if (cleanEnergyStation != null)
+                {
+                    cleanEnergyStation.Place();
+                }
             }
             else
             {
-                Debug.LogError("Failed to get item prefab for placing item."); // Debug log to catch errors
+                Debug.LogError("Failed to get item prefab for placing item.");
             }
         }
 
@@ -284,6 +291,16 @@ namespace UNDO
                     items.RemoveAt(index);
                 }
                 onItemChangedCallBack?.Invoke();
+            }
+        }
+
+        public void AddItemToInventory(GameObject placedItem)
+        {
+            CleanEnergyStation cleanEnergyStation = placedItem.GetComponent<CleanEnergyStation>();
+            if (cleanEnergyStation != null)
+            {
+                Add(cleanEnergyStation.item, 1);
+                Destroy(placedItem);
             }
         }
     }

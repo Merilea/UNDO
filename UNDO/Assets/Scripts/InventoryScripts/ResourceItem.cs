@@ -9,7 +9,6 @@ namespace UNDO
 
         public override void Interact()
         {
-            base.Interact();
             AddToInventory();
         }
 
