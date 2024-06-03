@@ -92,10 +92,26 @@ namespace UNDO
 
         public void UseItem()
         {
-            if (_item.item.itemType == ItemType.Food || _item.item.itemType == ItemType.Water)
+            if (_item.item != null)
             {
-                Inventory.instance.Consume(_item.item, _item.quantity);
-                ClearSlot();
+                if (_item.item.itemType == ItemType.CleanEnergyStation)
+                {
+                    Inventory.instance.StartPlacement(_item.item); // Start placement process
+                }
+                else
+                {
+                    Inventory.instance.Consume(_item.item, 1); // Consume one item at a time
+                    if (_item.quantity <= 1)
+                    {
+                        ClearSlot();
+                    }
+                    else
+                    {
+                        SetAmount(_item.quantity - 1);
+                        _item = _item.ChangeQuantity(_item.quantity - 1);
+                    }
+                }
+                Inventory.instance.onItemChangedCallBack?.Invoke(); // Ensure UI is updated
             }
         }
     }

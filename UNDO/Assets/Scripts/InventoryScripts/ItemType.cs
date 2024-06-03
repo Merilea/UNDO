@@ -4,7 +4,6 @@ namespace UNDO
     {
         Food,
         Water,
-        Gear,
         CleanEnergyStation
     }
 }

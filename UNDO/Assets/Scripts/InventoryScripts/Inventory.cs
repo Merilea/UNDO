@@ -139,13 +139,18 @@ namespace UNDO
 
         public void RemoveItem(ItemSO item)
         {
-            items.RemoveAt(IsStored(new Item { quantity = 0, item = item }));
-            onItemChangedCallBack?.Invoke();
+            int index = IsStored(item);
+            if (index >= 0)
+            {
+                items.RemoveAt(index);
+                onItemChangedCallBack?.Invoke();
+            }
         }
 
         public void StartPlacement(ItemSO item)
         {
             itemToPlace = item;
+            Debug.Log("Starting placement for item: " + itemToPlace.name); // Debug log to check itemToPlace
             isPlacingItem = true;
             CreatePlacementIndicator(item);
         }
@@ -162,6 +167,11 @@ namespace UNDO
             {
                 placementIndicator = Instantiate(itemPrefab);
                 DisablePhysics(placementIndicator);
+                Debug.Log("Placement indicator created for item: " + item.name); // Debug log to confirm creation
+            }
+            else
+            {
+                Debug.LogError("Failed to get item prefab for placement indicator."); // Debug log to catch errors
             }
         }
 
@@ -190,16 +200,29 @@ namespace UNDO
 
         private void UpdatePlacement()
         {
+            if (placementIndicator == null)
+            {
+                Debug.LogError("Placement indicator is null."); // Debug log to catch null reference
+                return;
+            }
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                placementIndicator.transform.position = hit.point;
+                Vector3 newPosition = hit.point;
+                newPosition.y += placementIndicator.transform.localScale.y / 2; // Adjust position to be above the terrain
+                placementIndicator.transform.position = newPosition;
+                Debug.Log("Placement indicator position updated to: " + newPosition); // Debug log to check position
 
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.E))
                 {
-                    PlaceItem(itemToPlace, hit.point); // Pass itemToPlace and position
+                    PlaceItem(itemToPlace, newPosition); // Pass itemToPlace and position
                 }
+            }
+            else
+            {
+                Debug.LogError("Raycast did not hit any surface."); // Debug log to catch raycast errors
             }
         }
 
@@ -213,6 +236,11 @@ namespace UNDO
                 RemoveItem(item);
                 isPlacingItem = false;
                 Destroy(placementIndicator);
+                Debug.Log("Item placed at position: " + position); // Debug log to confirm placement
+            }
+            else
+            {
+                Debug.LogError("Failed to get item prefab for placing item."); // Debug log to catch errors
             }
         }
 
@@ -247,10 +275,13 @@ namespace UNDO
             if (index >= 0)
             {
                 int newQuantity = items[index].quantity - quantity;
-                items[index] = items[index].ChangeQuantity(newQuantity);
-                if (items[index].quantity <= 0)
+                if (newQuantity > 0)
                 {
-                    RemoveItem(item);
+                    items[index] = items[index].ChangeQuantity(newQuantity);
+                }
+                else
+                {
+                    items.RemoveAt(index);
                 }
                 onItemChangedCallBack?.Invoke();
             }

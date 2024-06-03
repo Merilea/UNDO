@@ -56,7 +56,7 @@ public class PlaceableItem : MonoBehaviour
         }
 
         // Confirm placement with left mouse button
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.E))
         {
             Instantiate(gameObject, placeholder.transform.position, Quaternion.identity);
             Debug.Log("Object instantiated at: " + placeholder.transform.position);
@@ -74,4 +74,3 @@ public class PlaceableItem : MonoBehaviour
         }
     }
 }
-

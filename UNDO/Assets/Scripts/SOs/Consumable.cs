@@ -3,7 +3,6 @@ using UNDO;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Consumable")]
-
 public class Consumable : ItemSO
 {
     public HealingMode healingMode;
@@ -11,13 +10,9 @@ public class Consumable : ItemSO
     public override void Use()
     {
         base.Use();
-        if(healingMode == HealingMode.Health)
+        if (healingMode == HealingMode.Health)
         {
             Debug.Log("Adding " + healAmount + " to your health points");
-            RemoveFromInventory();
-        }else if(healingMode == HealingMode.Shield)
-        {
-            Debug.Log("Adding " + healAmount + " to your shield points");
             RemoveFromInventory();
         }
     }
@@ -30,6 +25,5 @@ public class Consumable : ItemSO
 
 public enum HealingMode
 {
-    Health,
-    Shield
+    Health
 }

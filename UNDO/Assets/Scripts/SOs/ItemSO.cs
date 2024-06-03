@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace UNDO
 {
-
     [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
     public class ItemSO : ScriptableObject
     {

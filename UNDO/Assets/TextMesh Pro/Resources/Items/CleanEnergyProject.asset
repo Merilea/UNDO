@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c4e849080c68094db22bb5172ca5a81, type: 3}
+  m_Name: CleanEnergyProject
+  m_EditorClassIdentifier: 
+  itemType: 2
+  name: CleanEnergyStation
+  prefab: {fileID: 8192583423577095692, guid: e46fc6fa36b255c40af1e2ab183b320f, type: 3}
+  icon: {fileID: 0}
+  size: 1
+  interactText: 'Press E to pickup '
+  description: 
+  isStackable: 0
+  maxStackAmount: 1

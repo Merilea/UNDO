@@ -19,7 +19,7 @@ MonoBehaviour:
   size: 10
   interactText: 'Press E to pickup '
   description: Bottled Water
-  isStackable: 0
+  isStackable: 1
   maxStackAmount: 5
   healingMode: 0
   healAmount: 10
