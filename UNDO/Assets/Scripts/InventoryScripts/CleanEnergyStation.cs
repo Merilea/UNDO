@@ -11,12 +11,13 @@ namespace UNDO
         {
             if (isPlaced)
             {
-                // Pick up the placed item
+                Debug.Log("Picking up placed CleanEnergyStation.");
                 Inventory.instance.Add(item, 1);
                 Destroy(gameObject);
             }
             else
             {
+                Debug.Log("Adding CleanEnergyStation to inventory.");
                 Inventory.instance.Add(item, 1);
                 gameObject.SetActive(false);
             }
@@ -26,6 +27,7 @@ namespace UNDO
         {
             gameObject.SetActive(true);
             isPlaced = true;
+            Debug.Log("CleanEnergyStation placed.");
         }
     }
 }
