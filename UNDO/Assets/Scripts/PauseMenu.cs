@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+    public static bool GameIsPaused = false; // Static variable to track pause state
     public GameObject pauseMenuCanvas;
     public InventoryUi inventoryUi;
 
@@ -48,12 +49,12 @@ public class PauseMenu : MonoBehaviour
     {
         if (pauseMenuCanvas != null)
         {
-            bool isPaused = !pauseMenuCanvas.activeSelf;
-            pauseMenuCanvas.SetActive(isPaused);
-            Time.timeScale = isPaused ? 0f : 1f; // Pause or resume the game accordingly
+            GameIsPaused = !pauseMenuCanvas.activeSelf;
+            pauseMenuCanvas.SetActive(GameIsPaused);
+            Time.timeScale = GameIsPaused ? 0f : 1f; // Pause or resume the game accordingly
 
             // Ensure the cursor is visible and manage its lock state
-            Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.lockState = GameIsPaused ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = true;
         }
     }
@@ -62,6 +63,7 @@ public class PauseMenu : MonoBehaviour
     {
         if (pauseMenuCanvas != null)
         {
+            GameIsPaused = false;
             pauseMenuCanvas.SetActive(false); // Hide the pause menu canvas
             Time.timeScale = 1f; // Resume the game by setting time scale to 1
 
@@ -74,6 +76,7 @@ public class PauseMenu : MonoBehaviour
     {
         if (pauseMenuCanvas != null && pauseMenuCanvas.activeSelf)
         {
+            GameIsPaused = false;
             pauseMenuCanvas.SetActive(false);
             Time.timeScale = 1f; // Ensure the game resumes if the pause menu was active
         }
@@ -88,3 +91,4 @@ public class PauseMenu : MonoBehaviour
         Debug.Log("Help: Use WASD to walk."); // Placeholder for displaying help
     }
 }
+

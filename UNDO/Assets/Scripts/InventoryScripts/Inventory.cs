@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UNDO;
 using UnityEngine;
+using TMPro;
 
 namespace UNDO
 {
@@ -36,6 +37,8 @@ namespace UNDO
 
         [SerializeField] private ItemFactory factory; // Ensure ItemFactory is recognized
         [SerializeField] private GameObject slotsParent;
+        [SerializeField] private TextMeshProUGUI placementText; // Reference to the UI Text element
+        [SerializeField] private InventoryUi inventoryUI; // Reference to the InventoryUi script
         [HideInInspector] public int maxSlots = 0;
         public List<Item> items;
         public int spaceUsed = 0;
@@ -55,6 +58,15 @@ namespace UNDO
         {
             maxSlots = slotsParent.transform.childCount;
             items = new List<Item>(maxSlots);
+
+            if (placementText != null)
+            {
+                placementText.gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("PlacementText reference is not set in the Inspector.");
+            }
         }
 
         public bool Add(ItemSO item, int quantity)
@@ -153,6 +165,8 @@ namespace UNDO
             Debug.Log("Starting placement for item: " + itemToPlace.name);
             isPlacingItem = true;
             CreatePlacementIndicator(item);
+            ShowPlacementText(); // Show the placement text when starting placement
+            inventoryUI.ToggleInventory(); // Hide the inventory UI
         }
 
         private void CreatePlacementIndicator(ItemSO item)
@@ -240,6 +254,8 @@ namespace UNDO
                 RemoveItem(item);
                 isPlacingItem = false;
                 Destroy(placementIndicator);
+                HidePlacementText(); // Hide the placement text after placement
+                inventoryUI.ToggleInventory(); // Show the inventory UI again
                 Debug.Log("Item placed at position: " + position);
 
                 // Ensure the placed item has CleanEnergyStation component to allow interaction for pickup
@@ -262,6 +278,8 @@ namespace UNDO
             {
                 Destroy(placementIndicator);
             }
+            HidePlacementText(); // Hide the placement text when cancelling placement
+            inventoryUI.ToggleInventory(); // Show the inventory UI again
             Debug.Log("Placement cancelled.");
         }
 
@@ -277,6 +295,22 @@ namespace UNDO
             if (col != null)
             {
                 col.enabled = true;
+            }
+        }
+
+        private void ShowPlacementText()
+        {
+            if (placementText != null)
+            {
+                placementText.gameObject.SetActive(true);
+            }
+        }
+
+        private void HidePlacementText()
+        {
+            if (placementText != null)
+            {
+                placementText.gameObject.SetActive(false);
             }
         }
 

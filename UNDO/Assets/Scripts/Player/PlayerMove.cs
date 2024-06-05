@@ -75,7 +75,7 @@ public class PlayerMove : MonoBehaviour
             return; // Exit update if any required component is missing
         }
 
-        if (!objectInspection.IsInspecting() && !isInventoryOpen)
+        if (!objectInspection.IsInspecting() && !isInventoryOpen && !PauseMenu.GameIsPaused)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = true;
