@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class ObjectInspection : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class ObjectInspection : MonoBehaviour
     public float maxInspectionDistance = 3f;
     public Texture2D hoverCursor;
     public Texture2D defaultCursor;
+    public TextMeshProUGUI inspectionText; // Reference to the UI Text element
+
     private Camera playerCamera;
     private bool isZoomed = false;
     private GameObject currentObject;
@@ -19,6 +22,15 @@ public class ObjectInspection : MonoBehaviour
     {
         playerCamera = Camera.main;
         Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
+
+        if (inspectionText != null)
+        {
+            inspectionText.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("InspectionText reference is not set in the Inspector.");
+        }
     }
 
     void Update()
@@ -42,11 +54,17 @@ public class ObjectInspection : MonoBehaviour
                 {
                     Cursor.SetCursor(hoverCursor, Vector2.zero, CursorMode.Auto);
 
+                    if (!isZoomed) // Show text only if not already zoomed
+                    {
+                        ShowInspectionText(hit);
+                    }
+
                     if (Input.GetKeyDown(KeyCode.E) && Time.time > lastZoomToggleTime + debounceTime)
                     {
                         isZoomed = !isZoomed; // Toggle zoom state
                         currentObject = hit.collider.gameObject;
                         lastZoomToggleTime = Time.time; // Update the last toggle time
+                        HideInspectionText(); // Hide the inspection text when starting the inspection
                         if (!isZoomed)
                         {
                             StopInspection();
@@ -57,16 +75,19 @@ public class ObjectInspection : MonoBehaviour
                 else
                 {
                     Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
+                    HideInspectionText();
                 }
             }
             else
             {
                 Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
+                HideInspectionText();
             }
         }
         else
         {
             Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
+            HideInspectionText();
         }
     }
 
@@ -89,6 +110,26 @@ public class ObjectInspection : MonoBehaviour
         }
     }
 
+    void ShowInspectionText(RaycastHit hit)
+    {
+        if (inspectionText != null && !inspectionText.gameObject.activeSelf)
+        {
+            inspectionText.gameObject.SetActive(true);
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(hit.point);
+            inspectionText.transform.position = screenPosition;
+            Debug.Log("Showing inspection text at: " + screenPosition);
+        }
+    }
+
+    void HideInspectionText()
+    {
+        if (inspectionText != null && inspectionText.gameObject.activeSelf)
+        {
+            inspectionText.gameObject.SetActive(false);
+            Debug.Log("Hiding inspection text");
+        }
+    }
+
     public bool IsInspecting()
     {
         return isZoomed;
@@ -101,6 +142,8 @@ public class ObjectInspection : MonoBehaviour
         Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = true;
+        HideInspectionText(); // Ensure the text is hidden when stopping inspection
+        Debug.Log("Inspection stopped and text hidden");
     }
 
     private void ResetFOV()

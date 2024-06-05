@@ -195,6 +195,10 @@ namespace UNDO
             if (isPlacingItem)
             {
                 UpdatePlacement();
+                if (Input.GetKeyDown(KeyCode.X))
+                {
+                    CancelPlacement();
+                }
             }
         }
 
@@ -251,6 +255,16 @@ namespace UNDO
             }
         }
 
+        private void CancelPlacement()
+        {
+            isPlacingItem = false;
+            if (placementIndicator != null)
+            {
+                Destroy(placementIndicator);
+            }
+            Debug.Log("Placement cancelled.");
+        }
+
         private void EnablePhysics(GameObject obj)
         {
             Rigidbody rb = obj.GetComponent<Rigidbody>();
@@ -291,16 +305,6 @@ namespace UNDO
                     items.RemoveAt(index);
                 }
                 onItemChangedCallBack?.Invoke();
-            }
-        }
-
-        public void AddItemToInventory(GameObject placedItem)
-        {
-            CleanEnergyStation cleanEnergyStation = placedItem.GetComponent<CleanEnergyStation>();
-            if (cleanEnergyStation != null)
-            {
-                Add(cleanEnergyStation.item, 1);
-                Destroy(placedItem);
             }
         }
     }
