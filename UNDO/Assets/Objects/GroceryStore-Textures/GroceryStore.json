@@ -1,0 +1,121 @@
+{
+    "format": {
+        "version": "1.0"
+    },
+    "scene": {
+        "scale_factor": 6.097105026245117
+    },
+    "shaders": {
+        "Main shader": {
+            "displacementTessellation": {
+                "displacement": {
+                    "scale": 0,
+                    "source_channel": 0
+                },
+                "enable": true,
+                "tessellation": {
+                    "max_length": 64,
+                    "subdiv_count": 1,
+                    "subdiv_mode": 0
+                }
+            },
+            "parameters": {
+                "Base Surface": {
+                    "ao_intensity": 0.75,
+                    "emissive_intensity": 1,
+                    "horizonFade": 1.2999999523162842,
+                    "nbSamples": 16
+                },
+                "Geometry/Bent Normal": {
+                    "bent_normal_diffuse_amount": 1,
+                    "bent_normal_specular_amount": 1,
+                    "use_bent_normal": false
+                },
+                "Geometry/Parallax Occlusion Mapping": {
+                    "maxPOMSamples": 16,
+                    "minPOMSamples": 4,
+                    "pomStrength": 1,
+                    "usePOM": false
+                },
+                "Interior/Subsurface Scattering Parameters": {
+                    "sssColor": [
+                        0.7009999752044678,
+                        0.3009999990463257,
+                        0.3050000071525574
+                    ],
+                    "sssEnabled": false,
+                    "sssRayleigh": 0,
+                    "sssRedShift": 0,
+                    "sssScale": 0.5,
+                    "sssScatteringColorSource": 0,
+                    "sssScatteringUsesTranslucency": false,
+                    "sssType": 2
+                }
+            },
+            "shader": "pbr-metal-rough",
+            "shaderInstance": "Main shader"
+        }
+    },
+    "texturesets": {
+        "Cloth_Front": {
+            "shader": "Main shader"
+        },
+        "Cloth_Sides": {
+            "shader": "Main shader"
+        },
+        "Door": {
+            "shader": "Main shader"
+        },
+        "DoorHandle": {
+            "shader": "Main shader"
+        },
+        "Door_Glass": {
+            "shader": "Main shader"
+        },
+        "Glass_Windows": {
+            "shader": "Main shader"
+        },
+        "Ground_Plate": {
+            "shader": "Main shader"
+        },
+        "House_Floor_001": {
+            "shader": "Main shader"
+        },
+        "House_Walls_Bottom_inside": {
+            "shader": "Main shader"
+        },
+        "House_Walls_Top": {
+            "shader": "Main shader"
+        },
+        "Outside_Walls": {
+            "shader": "Main shader"
+        },
+        "Roofpole_Front___Back": {
+            "shader": "Main shader"
+        },
+        "Roofpole_Sides": {
+            "shader": "Main shader"
+        },
+        "SidePoles_Back": {
+            "shader": "Main shader"
+        },
+        "SidePoles_Front": {
+            "shader": "Main shader"
+        },
+        "Sign": {
+            "shader": "Main shader"
+        },
+        "Structure_Front": {
+            "shader": "Main shader"
+        },
+        "Windows_Front": {
+            "shader": "Main shader"
+        },
+        "Windows_Sides": {
+            "shader": "Main shader"
+        },
+        "structure_sides": {
+            "shader": "Main shader"
+        }
+    }
+}
