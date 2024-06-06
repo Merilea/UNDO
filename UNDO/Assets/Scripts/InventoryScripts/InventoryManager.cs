@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UNDO; // Ensure this namespace matches the rest of your scripts
 
 public class InventoryManager : MonoBehaviour
 {
@@ -154,11 +155,14 @@ public class InventoryManager : MonoBehaviour
     {
         Debug.Log("Inventory button clicked for: " + item.name);
         ToggleInventory(); // Hide inventory
-        PlaceableItem placeableItem = item.GetComponent<PlaceableItem>();
-        if (placeableItem != null)
+
+        // Directly interface with Inventory script to start placement
+        PickUpBehaviour pickupBehavior = item.GetComponent<PickUpBehaviour>(); // Get the ItemSO from the pickup behavior
+        if (pickupBehavior != null)
         {
             Debug.Log("Starting to place item: " + item.name);
-            placeableItem.StartPlacing(() => RemoveItem(item));
+            Inventory.instance.StartPlacement(pickupBehavior.item);
+            RemoveItem(item); // Remove item from the inventory list
         }
     }
 }

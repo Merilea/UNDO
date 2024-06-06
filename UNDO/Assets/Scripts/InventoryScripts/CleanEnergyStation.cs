@@ -1,25 +1,32 @@
+using UNDO;
 using UnityEngine;
 
 namespace UNDO
 {
-    public class CleanEnergyStation : Interactable
+    public class CleanEnergyStation : MonoBehaviour
     {
         public ItemSO item;
+
         private bool isPlaced = false;
 
-        public override void Interact()
+        public void Interact()
         {
-            if (isPlaced)
+            if (!isPlaced)
             {
-                Debug.Log("Picking up placed CleanEnergyStation.");
-                Inventory.instance.Add(item, 1);
-                Destroy(gameObject);
+                if (Inventory.instance.Add(item, 1))
+                {
+                    Destroy(gameObject); // Destroy the game object after adding to inventory
+                }
+                else
+                {
+                    Debug.Log("Failed to add item to inventory");
+                }
             }
             else
             {
-                Debug.Log("Adding CleanEnergyStation to inventory.");
                 Inventory.instance.Add(item, 1);
                 gameObject.SetActive(false);
+                isPlaced = false;
             }
         }
 
@@ -27,7 +34,6 @@ namespace UNDO
         {
             gameObject.SetActive(true);
             isPlaced = true;
-            Debug.Log("CleanEnergyStation placed.");
         }
     }
 }

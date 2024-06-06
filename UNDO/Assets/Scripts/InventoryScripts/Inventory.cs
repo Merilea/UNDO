@@ -35,10 +35,10 @@ namespace UNDO
         }
         #endregion
 
-        [SerializeField] private ItemFactory factory; // Ensure ItemFactory is recognized
+        [SerializeField] private ItemFactory factory;
         [SerializeField] private GameObject slotsParent;
-        [SerializeField] private TextMeshProUGUI placementText; // Reference to the UI Text element
-        [SerializeField] private InventoryUi inventoryUI; // Reference to the InventoryUi script
+        [SerializeField] private TextMeshProUGUI placementText;
+        [SerializeField] private InventoryUi inventoryUI;
         [HideInInspector] public int maxSlots = 0;
         public List<Item> items;
         public int spaceUsed = 0;
@@ -82,33 +82,28 @@ namespace UNDO
                 int index = IsStored(newItem);
                 if (index >= 0 && ((newItem.quantity + items[index].quantity) <= (newItem.item.maxStackAmount)))
                 {
-                    // Stacking items in the same slot
                     items[index] = newItem.ChangeQuantity((newItem.quantity) + (items[index].quantity));
                     onItemChangedCallBack?.Invoke();
                     return true;
                 }
                 else if (items.Count + 1 > maxSlots)
                 {
-                    // Not enough space
                     FailMessageUI();
                     return false;
                 }
                 else
                 {
-                    // Add an item to a new slot
                     AddOnANewSlot(newItem);
                     return true;
                 }
             }
             else if (items.Count + 1 <= maxSlots)
             {
-                // Add an item to a new slot
                 AddOnANewSlot(newItem);
                 return true;
             }
             else
             {
-                // Inventory doesn't have space for an unstackable item
                 FailMessageUI();
                 return false;
             }
@@ -165,8 +160,8 @@ namespace UNDO
             Debug.Log("Starting placement for item: " + itemToPlace.name);
             isPlacingItem = true;
             CreatePlacementIndicator(item);
-            ShowPlacementText(); // Show the placement text when starting placement
-            inventoryUI.ToggleInventory(); // Hide the inventory UI
+            ShowPlacementText();
+            inventoryUI.ToggleInventory();
         }
 
         private void CreatePlacementIndicator(ItemSO item)
@@ -180,12 +175,22 @@ namespace UNDO
             if (itemPrefab != null)
             {
                 placementIndicator = Instantiate(itemPrefab);
+                EnableGameObject(placementIndicator);
                 DisablePhysics(placementIndicator);
                 Debug.Log("Placement indicator created for item: " + item.name);
             }
             else
             {
                 Debug.LogError("Failed to get item prefab for placement indicator.");
+            }
+        }
+
+        private void EnableGameObject(GameObject obj)
+        {
+            obj.SetActive(true);
+            foreach (Transform child in obj.transform)
+            {
+                child.gameObject.SetActive(true);
             }
         }
 
@@ -229,7 +234,7 @@ namespace UNDO
             if (Physics.Raycast(ray, out hit))
             {
                 Vector3 newPosition = hit.point;
-                newPosition.y += placementIndicator.transform.localScale.y / 2; // Adjust position to be above the terrain
+                newPosition.y = 0.6f; // Ensure consistent height
                 placementIndicator.transform.position = newPosition;
                 Debug.Log("Placement indicator position updated to: " + newPosition);
 
@@ -249,21 +254,15 @@ namespace UNDO
             GameObject itemPrefab = factory.getItem(item.itemType);
             if (itemPrefab != null)
             {
-                GameObject placedItem = Instantiate(itemPrefab, position, Quaternion.identity);
-                EnablePhysics(placedItem);
+                Vector3 adjustedPosition = new Vector3(position.x, 0.6f, position.z); // Ensure consistent height
+                GameObject placedItem = Instantiate(itemPrefab, adjustedPosition, Quaternion.identity);
+                EnableGameObject(placedItem);
                 RemoveItem(item);
                 isPlacingItem = false;
                 Destroy(placementIndicator);
-                HidePlacementText(); // Hide the placement text after placement
-                inventoryUI.ToggleInventory(); // Show the inventory UI again
-                Debug.Log("Item placed at position: " + position);
-
-                // Ensure the placed item has CleanEnergyStation component to allow interaction for pickup
-                CleanEnergyStation cleanEnergyStation = placedItem.GetComponent<CleanEnergyStation>();
-                if (cleanEnergyStation != null)
-                {
-                    cleanEnergyStation.Place();
-                }
+                HidePlacementText();
+                inventoryUI.ToggleInventory();
+                Debug.Log("Item placed at position: " + adjustedPosition);
             }
             else
             {
@@ -278,24 +277,9 @@ namespace UNDO
             {
                 Destroy(placementIndicator);
             }
-            HidePlacementText(); // Hide the placement text when cancelling placement
-            inventoryUI.ToggleInventory(); // Show the inventory UI again
+            HidePlacementText();
+            inventoryUI.ToggleInventory();
             Debug.Log("Placement cancelled.");
-        }
-
-        private void EnablePhysics(GameObject obj)
-        {
-            Rigidbody rb = obj.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.isKinematic = false;
-            }
-
-            Collider col = obj.GetComponent<Collider>();
-            if (col != null)
-            {
-                col.enabled = true;
-            }
         }
 
         private void ShowPlacementText()
@@ -320,7 +304,7 @@ namespace UNDO
             PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
-                playerHealth.Heal(quantity * 10); // Example: each item restores 10 health
+                playerHealth.Heal(quantity * 10);
             }
         }
 
