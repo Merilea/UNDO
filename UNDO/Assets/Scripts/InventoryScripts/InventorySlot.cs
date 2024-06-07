@@ -96,7 +96,7 @@ namespace UNDO
             {
                 if (_item.item.itemType == ItemType.CleanEnergyStation)
                 {
-                    Inventory.instance.StartPlacement(_item.item); // Start placement process
+                    Inventory.instance.StartPlacement(_item.item); // Start placement process without zone
                 }
                 else
                 {
@@ -116,3 +116,4 @@ namespace UNDO
         }
     }
 }
+

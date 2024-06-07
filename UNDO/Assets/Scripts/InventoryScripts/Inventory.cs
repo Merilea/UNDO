@@ -53,6 +53,7 @@ namespace UNDO
         private ItemSO itemToPlace;
         private GameObject placementIndicator;
         private bool isPlacingItem;
+        private Collider currentPlacementZone; // Declare currentPlacementZone
 
         private void Start()
         {
@@ -154,7 +155,7 @@ namespace UNDO
             }
         }
 
-        public void StartPlacement(ItemSO item)
+        public void StartPlacement(ItemSO item, Collider zone = null)
         {
             itemToPlace = item;
             Debug.Log("Starting placement for item: " + itemToPlace.name);
@@ -162,6 +163,7 @@ namespace UNDO
             CreatePlacementIndicator(item);
             ShowPlacementText();
             inventoryUI.ToggleInventory();
+            currentPlacementZone = zone; // Store the current placement zone
         }
 
         private void CreatePlacementIndicator(ItemSO item)
@@ -242,10 +244,29 @@ namespace UNDO
                 {
                     PlaceItem(itemToPlace, newPosition);
                 }
+
+                // Change color if inside the valid placement zone
+                if (currentPlacementZone != null && currentPlacementZone.bounds.Contains(newPosition))
+                {
+                    ChangePlacementIndicatorColor(Color.green);
+                }
+                else
+                {
+                    ChangePlacementIndicatorColor(Color.white);
+                }
             }
             else
             {
                 Debug.LogError("Raycast did not hit any surface.");
+            }
+        }
+
+        private void ChangePlacementIndicatorColor(Color color)
+        {
+            Renderer renderer = placementIndicator.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.material.color = color;
             }
         }
 
@@ -263,6 +284,18 @@ namespace UNDO
                 HidePlacementText();
                 inventoryUI.ToggleInventory();
                 Debug.Log("Item placed at position: " + adjustedPosition);
+
+                CleanEnergyStation cleanEnergyStation = placedItem.GetComponent<CleanEnergyStation>();
+                if (cleanEnergyStation != null)
+                {
+                    cleanEnergyStation.Place();
+                    SolarPanelTask solarPanelTask = FindObjectOfType<SolarPanelTask>();
+                    if (solarPanelTask != null && (currentPlacementZone == null || currentPlacementZone.bounds.Contains(placedItem.transform.position)))
+                    {
+                        solarPanelTask.OnPlacementComplete(placedItem);
+                    }
+                    Debug.Log("CleanEnergyStation placed.");
+                }
             }
             else
             {
