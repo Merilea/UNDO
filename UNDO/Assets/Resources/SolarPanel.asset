@@ -20,4 +20,4 @@ MonoBehaviour:
   interactText: 'Press E to pickup '
   description: 
   isStackable: 0
-  maxStackAmount: 3
+  maxStackAmount: 1
