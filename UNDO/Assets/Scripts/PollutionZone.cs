@@ -12,6 +12,7 @@ public class PollutionZone : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.StartTakingDamage(damagePerSecond);
+                Debug.Log("Player entered pollution zone."); // Debug log
             }
         }
     }
@@ -24,6 +25,7 @@ public class PollutionZone : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.StopTakingDamage();
+                Debug.Log("Player exited pollution zone."); // Debug log
             }
         }
     }
