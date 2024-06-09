@@ -54,7 +54,7 @@ public class PlayerHealth : MonoBehaviour
 
     void Update()
     {
-        if (stamina < maxStamina && !IsPerformingAction())
+        if (stamina < maxStamina && !IsPerformingAction() && !isTakingDamage)
         {
             stamina += staminaRegenRate * Time.deltaTime;
             if (stamina > maxStamina)
