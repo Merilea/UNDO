@@ -1,58 +1,26 @@
 using UnityEngine;
 
-public class SolarPanelTask : GameTask
+public class SolarPanelTask : MonoBehaviour
 {
-    public Collider[] validPlacementZones; // Array of valid placement zones
+    private bool isTaskStarted = false;
 
     private void Start()
     {
-        QuestManager.instance.RegisterTask(this);
+        if (!isTaskStarted)
+        {
+            StartTask();
+            isTaskStarted = true;
+        }
     }
 
-    public override void OnTaskStart()
+    public void StartTask()
     {
         Debug.Log("Solar Panel Task Started");
+        // You can add additional initialization code here if needed
     }
 
-    public override void OnTaskComplete()
+    public void CheckPlacement(Vector3 position, CleanEnergyStation station)
     {
-        Debug.Log("Solar Panel Task Completed");
-        QuestManager.instance.CompleteCurrentTask();
-    }
-
-    public void OnPlacementComplete(GameObject placedItem)
-    {
-        foreach (Collider zone in validPlacementZones)
-        {
-            if (zone.bounds.Contains(placedItem.transform.position))
-            {
-                CompleteTask();
-                break;
-            }
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("PlacementIndicator"))
-        {
-            Renderer renderer = other.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.material.color = Color.green;
-            }
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("PlacementIndicator"))
-        {
-            Renderer renderer = other.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.material.color = Color.white; // or whatever the default color is
-            }
-        }
+        TaskManager.Instance.ShowTaskButtons(station);
     }
 }

@@ -11,7 +11,7 @@ namespace UNDO
         [SerializeField] private Image icon;
         [SerializeField] private Text itemName;
         [SerializeField] private Text amountDisplay;
-        [SerializeField] private GameObject useButton; // Change to use button
+        [SerializeField] private GameObject useButton;
 
         private int amount = 0;
 
@@ -48,7 +48,7 @@ namespace UNDO
 
             if (useButton != null)
             {
-                useButton.SetActive(true); // Enable use button
+                useButton.SetActive(true);
             }
         }
 
@@ -70,7 +70,7 @@ namespace UNDO
 
             if (useButton != null)
             {
-                useButton.SetActive(false); // Disable use button
+                useButton.SetActive(false);
             }
             SetAmount(0);
         }
@@ -116,4 +116,3 @@ namespace UNDO
         }
     }
 }
-

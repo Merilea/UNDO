@@ -54,9 +54,15 @@ public class GameManager : MonoBehaviour
     public void ReducePollution(float amount)
     {
         pollutionLevel -= amount;
-        if (pollutionLevel < 0)
+        if (pollutionLevel <= 0)
         {
             pollutionLevel = 0;
+        }
+
+        // Check if pollution level reaches the target for winning the game
+        if (pollutionLevel <= 50)
+        {
+            WinGame();
         }
     }
 

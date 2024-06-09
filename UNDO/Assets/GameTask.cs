@@ -1,23 +1,14 @@
+using UNDO;
 using UnityEngine;
 
-public class GameTask : MonoBehaviour
+public abstract class GameTask : MonoBehaviour
 {
-    public string taskDescription;
-    public bool isCompleted;
-
-    public virtual void OnTaskStart()
+    protected virtual void Start()
     {
-        Debug.Log("Task started: " + taskDescription);
+        GameTaskManager.Instance.RegisterTask(this);
     }
 
-    public virtual void OnTaskComplete()
-    {
-        Debug.Log("Task completed: " + taskDescription);
-    }
-
-    public void CompleteTask()
-    {
-        isCompleted = true;
-        OnTaskComplete();
-    }
+    public abstract void StartTask();
+    public abstract void CompleteTask();
+    public abstract void CheckPlacement(Vector3 position, CleanEnergyStation cleanEnergyStation);
 }

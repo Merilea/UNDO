@@ -9,6 +9,7 @@ namespace UNDO
         public float interactRange = 3f;
         public LayerMask interactableLayer;
         public TextMeshProUGUI pickupText; // Reference to the UI Text element
+        public TextMeshProUGUI turnOffText; // Reference to the Turn Off Text element
 
         private Interactable currentInteractable;
         private float textTimeout = 0.2f; // Timeout period for hiding the text
@@ -24,6 +25,15 @@ namespace UNDO
             {
                 Debug.LogError("PickupText reference is not set in the Inspector.");
             }
+
+            if (turnOffText != null)
+            {
+                turnOffText.gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("TurnOffText reference is not set in the Inspector.");
+            }
         }
 
         void Update()
@@ -38,12 +48,21 @@ namespace UNDO
 
             CheckForInteractable();
 
-            // Hide text if timeout period has passed
+            // Hide texts if timeout period has passed
             if (pickupText.gameObject.activeSelf && textTimer <= 0)
             {
                 HidePickupText();
             }
             else if (pickupText.gameObject.activeSelf)
+            {
+                textTimer -= Time.deltaTime;
+            }
+
+            if (turnOffText.gameObject.activeSelf && textTimer <= 0)
+            {
+                HideTurnOffText();
+            }
+            else if (turnOffText.gameObject.activeSelf)
             {
                 textTimer -= Time.deltaTime;
             }
@@ -68,7 +87,7 @@ namespace UNDO
                         }
                         currentInteractable = interactable;
                     }
-                    ShowPickupText(hit);
+                    ShowInteractionText(hit, interactable);
                 }
                 else
                 {
@@ -81,14 +100,22 @@ namespace UNDO
             }
         }
 
-        void ShowPickupText(RaycastHit hit)
+        void ShowInteractionText(RaycastHit hit, Interactable interactable)
         {
-            if (pickupText != null)
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(hit.point);
+            if (interactable is PollutionInteractable pollutionInteractable)
             {
-                pickupText.gameObject.SetActive(true);
-                Vector3 screenPosition = Camera.main.WorldToScreenPoint(hit.point);
-                pickupText.transform.position = screenPosition;
+                pollutionInteractable.ShowTurnOffText(screenPosition);
                 textTimer = textTimeout; // Reset the timer
+            }
+            else
+            {
+                if (pickupText != null)
+                {
+                    pickupText.gameObject.SetActive(true);
+                    pickupText.transform.position = screenPosition;
+                    textTimer = textTimeout; // Reset the timer
+                }
             }
         }
 
@@ -97,6 +124,14 @@ namespace UNDO
             if (pickupText != null)
             {
                 pickupText.gameObject.SetActive(false);
+            }
+        }
+
+        void HideTurnOffText()
+        {
+            if (turnOffText != null)
+            {
+                turnOffText.gameObject.SetActive(false);
             }
         }
 

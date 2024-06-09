@@ -1,39 +1,42 @@
 using UNDO;
 using UnityEngine;
 
-namespace UNDO
+public class CleanEnergyStation : MonoBehaviour
 {
-    public class CleanEnergyStation : MonoBehaviour
+    public ItemSO item;
+    private bool isPlaced = false;
+
+    public void Interact()
     {
-        public ItemSO item;
-
-        private bool isPlaced = false;
-
-        public void Interact()
+        if (!isPlaced)
         {
-            if (!isPlaced)
+            if (Inventory.instance.Add(item, 1))
             {
-                if (Inventory.instance.Add(item, 1))
-                {
-                    Destroy(gameObject); // Destroy the game object after adding to inventory
-                }
-                else
-                {
-                    Debug.Log("Failed to add item to inventory");
-                }
+                Destroy(gameObject); // Destroy the game object after adding to inventory
             }
             else
             {
-                Inventory.instance.Add(item, 1);
-                gameObject.SetActive(false);
-                isPlaced = false;
+                Debug.Log("Failed to add item to inventory");
             }
         }
+    }
 
-        public void Place()
+    public void Place()
+    {
+        gameObject.SetActive(true);
+        isPlaced = true;
+        // Notify task manager
+        SolarPanelTask solarPanelTask = FindObjectOfType<SolarPanelTask>();
+        if (solarPanelTask != null)
         {
-            gameObject.SetActive(true);
-            isPlaced = true;
+            solarPanelTask.CheckPlacement(transform.position, this);
         }
+    }
+
+    public void SetUninteractable()
+    {
+        isPlaced = true;
+        // Additional logic to make it uninteractable
+        GetComponent<Collider>().enabled = false;
     }
 }
