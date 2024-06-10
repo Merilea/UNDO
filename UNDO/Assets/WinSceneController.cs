@@ -8,4 +8,8 @@ public class WinSceneController : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
     }
+    public void GoToCredits()
+    {
+        SceneManager.LoadScene("Credits");
+    }
 }
