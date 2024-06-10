@@ -76,9 +76,22 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _AlphaClipValue: 0.5
+    - _AlphaCutoff: 0.5
     - _BoundsRadiusValue: 1
     - _CategoryDetail: 1
     - _CategoryEmissive: 1
@@ -87,7 +100,7 @@ Material:
     - _CategoryMain: 1
     - _CategoryMotion: 0
     - _CategoryObject: 1
-    - _CategoryOcclusion: 0
+    - _CategoryOcclusion: 1
     - _CategoryRender: 1
     - _CategorySubsurface: 0
     - _Cutoff: 0.5
@@ -111,6 +124,7 @@ Material:
     - _EmissiveMode: 0
     - _EmissiveTexMaxValue: 1
     - _EmissiveTexMinValue: 0
+    - _EnvironmentReflections: 1
     - _GlobalOverlay: 0.2
     - _HasEmissive: 1
     - _HasGradient: 0
@@ -129,9 +143,9 @@ Material:
     - _MainMaskMaxValue: 0
     - _MainMaskMinValue: 0
     - _MainMetallicValue: 0
-    - _MainNormalValue: 1
-    - _MainOcclusionValue: 0.5
-    - _MainSmoothnessValue: 1
+    - _MainNormalValue: 0
+    - _MainOcclusionValue: 1
+    - _MainSmoothnessValue: 0
     - _MessageBounds: 0
     - _MessageMainMask: 0
     - _MessageMotion: 0
@@ -142,6 +156,9 @@ Material:
     - _MotionValue_20: 1
     - _MotionValue_30: 1
     - _OverlayProjectionValue: 1
+    - _QueueControl: -1
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
     - _RenderClip: 0
     - _RenderCull: 2
     - _RenderDecals: 0
@@ -162,6 +179,7 @@ Material:
     - _SecondUVsMode: 0
     - _SecondUVsScaleMode: 0
     - _SpaceSubsurface: 0
+    - _SpecularHighlights: 1
     - _SubsurfaceAmbientValue: 0.2
     - _SubsurfaceAngleValue: 8
     - _SubsurfaceDiffusion: 0
@@ -186,6 +204,7 @@ Material:
     - _DetailBlendRemap: {r: 0, g: 1, b: 0, a: 0}
     - _DetailMaskRemap: {r: 0.073529415, g: 0.18749997, b: 0, a: 0}
     - _DetailMeshRemap: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissiveTexRemap: {r: 0, g: 0, b: 0, a: 0}
     - _EmissiveUVs: {r: 1, g: 1, b: 0, a: 0}
