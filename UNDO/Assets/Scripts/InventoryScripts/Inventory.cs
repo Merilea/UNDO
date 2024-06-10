@@ -234,7 +234,7 @@ namespace UNDO
             if (Physics.Raycast(ray, out hit))
             {
                 Vector3 newPosition = hit.point;
-                newPosition.y = 0.6f; // Ensure consistent height
+                newPosition.y = 5.5f; // Ensure consistent height
                 placementIndicator.transform.position = newPosition;
                 Debug.Log("Placement indicator position updated to: " + newPosition);
 
@@ -254,7 +254,7 @@ namespace UNDO
             GameObject itemPrefab = factory.getItem(item.itemType);
             if (itemPrefab != null)
             {
-                Vector3 adjustedPosition = new Vector3(position.x, 0.6f, position.z); // Ensure consistent height
+                Vector3 adjustedPosition = new Vector3(position.x, 5.5f, position.z); // Ensure consistent height
                 GameObject placedItem = Instantiate(itemPrefab, adjustedPosition, Quaternion.identity);
                 EnableGameObject(placedItem);
                 RemoveItem(item);
